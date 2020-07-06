@@ -38,15 +38,38 @@ namespace Puzzle15
                     block.Top = row * 85;
                     block.Left = col * 85;
                     block.Text = blockCount.ToString();
+                    //block.Name = "block" + blockCount.ToString();
+
+
+                    //block.Click += new EventHandler(Block_Click);
+                    block.Click += Block_Click;
+
                     if(blockCount == 16)
                     {
+                        block.Name = "EmptyBlock";
                         block.Text = string.Empty;
                         block.BackColor = Color.Lime;
+                        block.FlatStyle = FlatStyle.Flat;
+                        block.FlatAppearance.BorderSize = 0;
                     }
                     blockCount++;
                     this.Controls.Add(block);
                 }
             }
+        }
+
+        private void Block_Click(object sender, EventArgs e)
+        {
+            Button block = (Button)sender;
+            SwapBlocks(block);
+        }
+
+        private void SwapBlocks(Button block)
+        {
+            Button emptyBlock = (Button)this.Controls["EmptyBlock"];
+            Point oldLocation = block.Location;
+            block.Location = emptyBlock.Location;
+            emptyBlock.Location = oldLocation;
         }
     }
 }
