@@ -13,6 +13,7 @@ namespace Puzzle15
     public partial class Puzzle : Form
     {
         Random rand = new Random();
+        List<Point> initializeLocations = new List<Point>();
 
         public Puzzle()
         {
@@ -46,6 +47,7 @@ namespace Puzzle15
 
                     //block.Click += new EventHandler(Block_Click);
                     block.Click += Block_Click;
+                    initializeLocations.Add(block.Location);
 
                     if(blockCount == 16)
                     {
@@ -67,6 +69,7 @@ namespace Puzzle15
             if (IsAdjacent(block))
             {
                 SwapBlocks(block);
+                CheckForWin();
             }
         }
 
@@ -107,6 +110,32 @@ namespace Puzzle15
                 Button block = (Button)this.Controls[blockName];
                 SwapBlocks(block);
             }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShuffleBlocks();
+        }
+
+        private void CheckForWin()
+        {
+            string blockName;
+            Button block;
+            for(int i = 1; i < 16; i++)
+            {
+                blockName = "Block" + i.ToString();
+                block = (Button)this.Controls[blockName];
+                if(block.Location != initializeLocations[i - 1])
+                {
+                    return;
+                }
+            }
+            PuzzleSolved();
+        }
+
+        private void PuzzleSolved()
+        {
+            MessageBox.Show("You solved that!");
         }
     }
 }
