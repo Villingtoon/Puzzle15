@@ -12,11 +12,14 @@ namespace Puzzle15
 {
     public partial class Puzzle : Form
     {
+        Random rand = new Random();
+
         public Puzzle()
         {
             InitializeComponent();
             InitializePuzzle();
             AddButtons();
+            ShuffleBlocks();
         }
 
         private void InitializePuzzle()
@@ -38,7 +41,7 @@ namespace Puzzle15
                     block.Top = row * 85;
                     block.Left = col * 85;
                     block.Text = blockCount.ToString();
-                    //block.Name = "block" + blockCount.ToString();
+                    block.Name = "Block" + blockCount.ToString();
 
 
                     //block.Click += new EventHandler(Block_Click);
@@ -61,7 +64,10 @@ namespace Puzzle15
         private void Block_Click(object sender, EventArgs e)
         {
             Button block = (Button)sender;
-            SwapBlocks(block);
+            if (IsAdjacent(block))
+            {
+                SwapBlocks(block);
+            }
         }
 
         private void SwapBlocks(Button block)
@@ -70,6 +76,37 @@ namespace Puzzle15
             Point oldLocation = block.Location;
             block.Location = emptyBlock.Location;
             emptyBlock.Location = oldLocation;
+        }
+
+        private bool IsAdjacent(Button block)
+        {
+            double a;
+            double b;
+            double c;
+            Button emptyBlock = (Button)this.Controls["EmptyBlock"];
+
+            a = Math.Abs(emptyBlock.Top - block.Top);
+            b = Math.Abs(emptyBlock.Left - block.Left);
+            c = Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+            if (c < 100)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void ShuffleBlocks()
+        {
+            string blockName;
+            for (int i = 0; i < 100; i++)
+            {
+                blockName = "Block" + rand.Next(1, 16);
+                Button block = (Button)this.Controls[blockName];
+                SwapBlocks(block);
+            }
         }
     }
 }
